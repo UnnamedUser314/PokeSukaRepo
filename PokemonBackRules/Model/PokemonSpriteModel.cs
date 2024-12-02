@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace PokemonBackRules.Model
 {
@@ -22,4 +23,10 @@ namespace PokemonBackRules.Model
         public string front_shiny { get; set; }
         public object front_shiny_female { get; set; }
     }
+    public class PokemonStat
+    {
+        [JsonPropertyName("base_stat")]
+        public int BaseStat { get; set; }     
+    }
+    
 }

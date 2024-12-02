@@ -8,7 +8,8 @@ namespace PokemonBackRules.Utils
 {
     public static class Constantes
     {
-        public const string POKE_TYPE_URL= "https://pokeapi.co/api/v2/type/";
+        public const string POKE_TYPE_URL= "https://pokeapi.co/api/v2/pokemon/";
+        public const string POKE_TEAM_URL= "https://localhost:7119/Pokemon";
         public const int MAX_POKE_ITEMS = 15;
         public const string MISSINGNO_IMAGE_PATH = "../Resources/missingNo.jpg";
     }

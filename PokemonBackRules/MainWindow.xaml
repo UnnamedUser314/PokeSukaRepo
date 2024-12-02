@@ -8,15 +8,46 @@
         xmlns:view="clr-namespace:PokemonBackRules.View" 
         d:DataContext="{d:DesignInstance Type=viewmodel:MainViewModel}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="500" Width="830">
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewmodel:PokeSukaViewModel}">
             <view:PokeSukaView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodel:TeamViewModel}">
+            <view:TeamView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodel:HistoricViewModel}">
+            <view:HistoricView/>
+        </DataTemplate>
     </Window.Resources>
     <Grid>
-        <Grid>
-            <ContentControl Content="{Binding SelectedViewModel}"/>
-        </Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Menu FontSize="15" Grid.Row="0">
+            <MenuItem Header="Battle"
+                      Command="{Binding SelectViewModelCommand}"
+                        CommandParameter="{Binding PokeSukaViewModel}">
+
+            </MenuItem>
+            <MenuItem Header="Team" Command="{Binding SelectViewModelCommand}"
+                        CommandParameter="{Binding TeamViewModel}">
+
+            </MenuItem>
+            <MenuItem Header="Historic"
+                      Command="{Binding SelectViewModelCommand}"
+                        CommandParameter="{Binding HistoricViewModel}">
+
+            </MenuItem>
+            <MenuItem Header="Import">
+
+            </MenuItem>
+        </Menu>
+
+        <ContentControl Grid.Row="1" Content="{Binding SelectedViewModel}"/>
     </Grid>
+    
+    
 </Window>

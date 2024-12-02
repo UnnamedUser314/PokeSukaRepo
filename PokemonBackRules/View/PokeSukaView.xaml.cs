@@ -24,5 +24,6 @@ namespace PokemonBackRules.View
         {
             InitializeComponent();
         }
+
     }
 }

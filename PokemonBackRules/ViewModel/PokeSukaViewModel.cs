@@ -4,6 +4,11 @@ using PokemonBackRules.Model;
 using PokemonBackRules.Models;
 using PokemonBackRules.Utils;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Net.Http;
+using System.Text.Json;
+using System.Text;
+using System.Configuration;
 
 
 namespace PokemonBackRules.ViewModel
@@ -12,75 +17,176 @@ namespace PokemonBackRules.ViewModel
     {
 
         private static readonly Random _random = new();
-        public ObservableCollection<StackPanelItemModel> Items { get; set; }
-        public ObservableCollection<string> PokeTypes { get; } = new();
+        private static double pokemonCurrentHealth = 0;
+        private static int pokemonTotalHealth = 0;
+        private static double myCurrentHealth = 1000;
+        private static string pokemonName = null;
+        private static int pokemonId = 0;
+        private static string dateStart=null;
+        private static string dateEnd=null;
+        private static double damageDoneByMe = 0;
+        private static double damageDoneByPokemon = 0;
 
         [ObservableProperty]
-        public string _NumPokemons;
+        public string ataque;
 
         [ObservableProperty]
-        public int _PokemonType;
+        public string fronti;
+
+        [ObservableProperty]
+        public double pokeHpLeft;
+
+        [ObservableProperty]
+        public double myHpLeft;
+
 
         public PokeSukaViewModel()
         {
-            Items = new ObservableCollection<StackPanelItemModel>();
+            
         }
 
         public override async Task LoadAsync()
-        {
-            PokeTypesModel requestData =await HttpJsonClient<PokeTypesModel>.Get(Constantes.POKE_TYPE_URL) ?? new PokeTypesModel();
-            foreach (var element in requestData.Results)
-            {
-                PokeTypes.Add(element.NombreType);
-            }
+        {           
+            SpawnPokemon();
+            
         }
-
 
         [RelayCommand]
-        private async Task Suka_Click(object? parameter)
+        public void AttackPokemon()
         {
-            Items.Clear();
-            int numPokemonsGrid = StringUtils.ConvertToNumber(NumPokemons) ?? int.MaxValue;
-            if (PokemonType>=0 && PokemonType<= PokeTypes.Count-1 
-                && StringUtils.ConvertToNumber(NumPokemons)!=null
-                && numPokemonsGrid <= Constantes.MAX_POKE_ITEMS)
+            double myAttack = _random.Next(0, 40);
+            damageDoneByMe += myAttack;
+            pokemonCurrentHealth -= myAttack;
+            PokeHpLeft = (pokemonCurrentHealth / pokemonTotalHealth) * 100;
+
+            if (pokemonCurrentHealth > 0)
             {
-                string tipo = PokeTypes[PokemonType];
+                double damagePoke = int.Parse(Ataque);
+                damageDoneByPokemon += damagePoke;
+                myCurrentHealth -= damagePoke;
+                MyHpLeft = (myCurrentHealth/1000)*100;
+            } else
+            {
+                SpawnPokemon();
+                var pokemon = CreatePokemonObj();
+                HttpJsonClient<PokemonApiModel>.Post(Constantes.POKE_TEAM_URL, pokemon);
+            }
+            if(myCurrentHealth<=0)
+            {
+                SpawnPokemon();
+                var pokemon = CreatePokemonObj();
+                HttpJsonClient<PokemonApiModel>.Post(Constantes.POKE_TEAM_URL, pokemon);
+            }
+            
+        }
 
-                PokemonsByTypeModel pokemonsByType = await HttpJsonClient<PokemonsByTypeModel>.Get($"{Constantes.POKE_TYPE_URL}/{tipo}")
-                    ?? new PokemonsByTypeModel();
+        [RelayCommand]
+        public async Task PostToApiAsync()
+        {
+            try
+            {
+                int randomNumber = _random.Next(0,100);
+                var pokemon = CreatePokemonObj();
 
-                int indexStartShowPokemon = _random.Next(0, pokemonsByType.pokemon.Count - 2);
 
-                List<Task<PokemonSpriteModel>> peticionesSprite = new List<Task<PokemonSpriteModel>>();
+                List<PokemonApiModel> requestData = await HttpJsonClient<PokemonApiModel>.GetAll(Constantes.POKE_TEAM_URL) ?? new List<PokemonApiModel>();                    
 
-                for (int i = indexStartShowPokemon; i < pokemonsByType.pokemon.Count - 1 &&
-                    peticionesSprite.Count < numPokemonsGrid; i++)
-                {
-                    peticionesSprite.Add(HttpJsonClient<PokemonSpriteModel>.Get(pokemonsByType.pokemon[i].pokemon.url));
+                if (randomNumber > PokeHpLeft)
+                {                   
+                    myCurrentHealth += 50;
+                    if (requestData.Any(x => x.Id == pokemonId))
+                    {                       
+                        var poke = requestData.First(x => x.Id == pokemonId);
+                        var newPokemon = new
+                        {
+                            FrontDefault = Fronti,
+                            Name = pokemonName,
+                            Id = pokemonId,
+                            Level = poke.Level + 1,
+                            DateStart = dateStart,
+                            DateEnd = DateTime.Now.ToString("yyyy/mm/ddThh:mm:ss"),
+                            DamageDoneTrainer = damageDoneByMe,
+                            DamageReceivedTrainer = damageDoneByPokemon,
+                            DamageDonePokemon = damageDoneByPokemon - 50,
+                            Catch = true
+                        };
+                        HttpJsonClient<PokemonApiModel>.Put(Constantes.POKE_TEAM_URL+pokemonId, newPokemon);
+                    } else
+                    {
+                        pokemon = CreateCapturedPokemonObj();
+                        HttpJsonClient<PokemonApiModel>.Post(Constantes.POKE_TEAM_URL, pokemon);
+                    }
+                    
                 }
-                await Task.WhenAll(peticionesSprite);
 
-                await GenerateStackPanelItems(pokemonsByType, indexStartShowPokemon, peticionesSprite, numPokemonsGrid);
+
+                
             }
-        }
-
-        private async Task GenerateStackPanelItems(PokemonsByTypeModel pokemonsByType, int indexStartShowPokemon,
-            List<Task<PokemonSpriteModel>> peticionesSprite, int numPokemonsGrid)
-        {
-            int contador = 0;
-            PokemonSpriteModel sprite;
-            for (int i = indexStartShowPokemon; i < pokemonsByType.pokemon.Count - 1 &&
-               contador < numPokemonsGrid; i++)
+            catch (Exception ex)
             {
-                sprite = await peticionesSprite[contador];
-                contador++;
-                Items.Add(new StackPanelItemModel
-                {
-                    ImagePath = sprite.sprites.back_default ?? Constantes.MISSINGNO_IMAGE_PATH,
-                    PokemonName = pokemonsByType.pokemon[i].pokemon.name
-                });
+                Console.WriteLine($"Error posting to API: {ex.Message}");
             }
         }
+
+        [RelayCommand]
+        public void Escapar()
+        {
+            SpawnPokemon();
+        }
+        
+        public object CreatePokemonObj()
+        {
+            return new
+            {
+                FrontDefault = Fronti,
+                Name = pokemonName,
+                Id = pokemonId,
+                Level = 1,
+                DateStart = dateStart,
+                DateEnd = DateTime.Now.ToString("yyyy/mm/ddThh:mm:ss"),
+                DamageDoneTrainer = damageDoneByMe,
+                DamageReceivedTrainer = damageDoneByPokemon,
+                DamageDonePokemon = damageDoneByPokemon - 50,
+                Catch = false
+            };
+        }
+
+        public object CreateCapturedPokemonObj()
+        {
+            return new
+            {
+                FrontDefault = Fronti,
+                Name = pokemonName,
+                Id = pokemonId,
+                Level = 1,
+                DateStart = dateStart,
+                DateEnd = DateTime.Now.ToString("yyyy/mm/ddThh:mm:ss"),
+                DamageDoneTrainer = damageDoneByMe,
+                DamageReceivedTrainer = damageDoneByPokemon,
+                DamageDonePokemon = damageDoneByPokemon - 50,
+                Catch = true
+            };
+        }
+
+
+        public async void SpawnPokemon()
+        {
+            int pokemonNum = _random.Next(0, 100);
+            PokeHpLeft = 100;
+            MyHpLeft = (myCurrentHealth / 1000) * 100;
+            OnePokemonModel requestData = await HttpJsonClient<OnePokemonModel>.Get(Constantes.POKE_TYPE_URL + pokemonNum) ?? new OnePokemonModel();
+            Ataque = requestData.Stats.ElementAt(1).BaseStat.ToString();
+            Fronti = requestData.sprites.front_default;
+            pokemonCurrentHealth = requestData.Stats[0].BaseStat;
+            pokemonTotalHealth = requestData.Stats[0].BaseStat;
+            pokemonName = requestData.Name;
+            pokemonId = requestData.Id;
+            dateStart = DateTime.Now.ToString("yyyy/mm/ddThh:mm:ss");
+        }
+        
+
+
+
     }
+
 }

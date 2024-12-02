@@ -8,37 +8,21 @@
              d:DataContext="{d:DesignInstance Type=viewmodel:PokeSukaViewModel}"
              Background="Wheat"
              mc:Ignorable="d" 
-             d:DesignHeight="900" d:DesignWidth="900">
+             d:DesignHeight="420" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="50"/>
-        </Grid.RowDefinitions>
 
-        <ComboBox ItemsSource="{Binding PokeTypes}" Grid.Row="0" HorizontalAlignment="Left" Margin="60,0,0,0" VerticalAlignment="Center" Width="180" Height="30" SelectedIndex="{Binding PokemonType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Text="{Binding NumPokemons}" Grid.Row="0" HorizontalAlignment="Right" Margin="0,0,60,0" TextWrapping="Wrap" Height="30" VerticalAlignment="Center" Width="180"/>
-        <ScrollViewer Grid.Row="1">
-            <StackPanel >
-                <ItemsControl ItemsSource="{Binding Items, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Margin="5">
-                                <StackPanel>
-                                    <Image Source="{Binding ImagePath}" Stretch="Uniform" Height="100"/>
-                                    <TextBlock Text="{Binding PokemonName}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </StackPanel>
-        </ScrollViewer>
-        <Button Command="{Binding Suka_ClickCommand}" Grid.Row="2" Content="Sukar Pokemon" HorizontalAlignment="Right"  Margin="0,0,60,0" VerticalAlignment="Center" Width="180" Height="40"/>
+        </Grid.RowDefinitions>
+        <Label Content="{Binding Ataque, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  x:Name="ataque" HorizontalAlignment="Left" Margin="104,102,0,0" Grid.Row="1" VerticalAlignment="Top" Height="47" Width="79"/>
+        <Button Content="Escapar" Command="{Binding EscaparCommand}" HorizontalAlignment="Left" Margin="77,282,0,0" Grid.Row="1" VerticalAlignment="Top" Height="66" Width="145"/>
+        <Button Content="Atacar" Command="{Binding AttackPokemonCommand}" HorizontalAlignment="Center" Margin="0,228,0,0" Grid.Row="1" VerticalAlignment="Top" Height="98" Width="186"/>
+        <Button Content="Capturar" Command="{Binding PostToApiCommand}" HorizontalAlignment="Left" Margin="582,282,0,0" Grid.Row="1" VerticalAlignment="Top" Height="66" Width="145"/>
+        <ProgressBar Value="{Binding PokeHpLeft}" HorizontalAlignment="Left" Height="10" Margin="654,120,0,0" Grid.Row="1" VerticalAlignment="Top" Width="100"/>
+        <ProgressBar Value="{Binding MyHpLeft}"  HorizontalAlignment="Left" Height="21" Margin="77,361,0,0" Grid.Row="1" VerticalAlignment="Top" Width="650"/>
+        <Image Source="{Binding Fronti}" Margin="325,37,329,223" Grid.Row="1"/>
+
+
     </Grid>
 </UserControl>
