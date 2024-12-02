@@ -13,11 +13,19 @@ namespace PokemonBackRules.Utils
     {
         public static async Task<T?> Get(string url)
         {
-            using HttpClient httpClient = new HttpClient();
+            try
             {
-                HttpResponseMessage datos = await httpClient.GetAsync(url);
-                string dataget = await datos.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<T>(dataget);
+                using HttpClient httpClient = new HttpClient();
+                {
+                    HttpResponseMessage datos = await httpClient.GetAsync(url);
+                    string dataget = await datos.Content.ReadAsStringAsync();
+                    return JsonSerializer.Deserialize<T>(dataget);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return default(T?);
             }
         }
         public static async Task<List<T?>> GetAll(string url)

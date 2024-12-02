@@ -40,12 +40,12 @@ namespace PokemonBackRules.ViewModel
 
             List<PokemonApiModel> requestData = await HttpJsonClient<PokemonApiModel>.GetAll(Constantes.POKE_TEAM_URL) ?? new List<PokemonApiModel>();
 
-            foreach (var element in requestData)
+            var dictPokeLevel = requestData.Where(x => x.Catch)
+                              .GroupBy(x => x.Id)
+                              .Select(x => new { Pokemon = x.First(), Level = x.Count() });
+            foreach (var element in dictPokeLevel)
             {
-                if (element.Catch == true) {
-                    PokeTypes.Add(new List<string> { element.FrontDefault, element.Name + " Lvl: " + element.Level });
-                }
-                
+                PokeTypes.Add(new List<string> {element.Pokemon.FrontDefault,  element.Pokemon.Name + " Lvl: " + element.Level});                                
             }
 
             GenerateStackPanelItems();
