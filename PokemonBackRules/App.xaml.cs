@@ -1,8 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using PokemonBackRules.Interfaces;
+using PokemonBackRules.Services;
 using PokemonBackRules.ViewModel;
 using System.Configuration;
 using System.Data;
 using System.Windows;
+
 
 namespace PokemonBackRules
 {
@@ -38,6 +41,8 @@ namespace PokemonBackRules
             services.AddTransient<PokeSukaViewModel>();
             services.AddTransient<TeamViewModel>();
             services.AddTransient<HistoricViewModel>();
+
+            services.AddSingleton(typeof(IFileService<>), typeof(FileService<>));
 
             return services.BuildServiceProvider();
         }

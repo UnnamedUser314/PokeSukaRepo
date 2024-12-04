@@ -15,11 +15,11 @@ namespace PokemonBackRules.Model
 
         public string Name { get; set; }
 
-        public double DamageDoneTrainer { get; set; }
+        public string DamageDoneTrainer { get; set; }
 
-        public double DamageReceivedTrainer { get; set; }
+        public string DamageReceivedTrainer { get; set; }
 
-        public double DamageDonePokemon { get; set; }
+        public string DamageDonePokemon { get; set; }
 
         public bool Catch { get; set; }
     }

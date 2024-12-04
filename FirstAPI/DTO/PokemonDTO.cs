@@ -9,12 +9,11 @@ namespace FirstAPI.DTO
         public string FrontDefault { get; set; }
         public string Name { get; set; }
         public int Id { get; set; }
-        public int Level { get; set; }
         public string DateStart { get; set; }
         public string DateEnd { get; set; }
-        public double DamageDoneTrainer { get; set; }
-        public double DamageReceivedTrainer { get; set; }
-        public double DamageDonePokemon { get; set; }
+        public string DamageDoneTrainer { get; set; }
+        public string DamageReceivedTrainer { get; set; }
+        public string DamageDonePokemon { get; set; }
         public bool Catch { get; set; }
 
     }

@@ -55,8 +55,11 @@ namespace FirstAPI.Controllers
                 return null;
             }
             pokemonBBDD.Name = pokemon.Name;
+            pokemonBBDD.DamageDonePokemon = pokemon.DamageDonePokemon;
+            pokemonBBDD.DamageDoneTrainer = pokemon.DamageDoneTrainer;
+            pokemonBBDD.DamageReceivedTrainer = pokemon.DamageReceivedTrainer;
+            pokemonBBDD.Catch = pokemon.Catch;
             pokemonBBDD.FrontDefault = pokemon.FrontDefault;   
-            pokemonBBDD.Level = pokemon.Level;
             return pokemonBBDD;
         }
 

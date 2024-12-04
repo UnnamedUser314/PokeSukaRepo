@@ -16,18 +16,16 @@ namespace PokemonBackRules.Model
         [JsonPropertyName("id")]
         public int Id { get; set; }
 
-        [JsonPropertyName("level")]
-        public int Level { get; set; }
         [JsonPropertyName("dateStart")]
         public string DateStart { get; set; }
         [JsonPropertyName("dateEnd")]
         public string DateEnd { get; set; }
         [JsonPropertyName("damageDoneTrainer")]
-        public double DamageDoneTrainer { get; set; }
+        public string DamageDoneTrainer { get; set; }
         [JsonPropertyName("damageReceivedTrainer")]
-        public double DamageReceivedTrainer { get; set; }
+        public string DamageReceivedTrainer { get; set; }
         [JsonPropertyName("damageDonePokemon")]
-        public double DamageDonePokemon { get; set; }
+        public string DamageDonePokemon { get; set; }
         [JsonPropertyName("catch")]
         public bool Catch { get; set; }
     }

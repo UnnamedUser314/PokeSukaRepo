@@ -1,4 +1,6 @@
-﻿using PokemonBackRules.Model;
+﻿using CommunityToolkit.Mvvm.Input;
+using Microsoft.Win32;
+using PokemonBackRules.Model;
 using PokemonBackRules.Utils;
 using System;
 using System.Collections.Generic;
@@ -6,14 +8,28 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PokemonBackRules.Interfaces;
+using PokemonBackRules.Services;
+using CommunityToolkit.Mvvm.ComponentModel;
+
 
 namespace PokemonBackRules.ViewModel
 {
     public partial class HistoricViewModel : ViewModelBase
     {
+        private readonly IFileService<PokemonDataModel> _fileService;
 
-        public ObservableCollection<PokemonDataModel> PokemonsData { get; set; } 
+        
+        //public ObservableCollection<PokemonDataModel> PokemonsData { get; set; } 
 
+        public HistoricViewModel (IFileService<PokemonDataModel> fileService)
+        {
+            _fileService = fileService;
+            pokemonsData = new ObservableCollection<PokemonDataModel> ();
+        }
+        [ObservableProperty]
+
+        private ObservableCollection<PokemonDataModel> pokemonsData;
         public override async Task LoadAsync()
         {
             GenerateData();
@@ -23,11 +39,11 @@ namespace PokemonBackRules.ViewModel
 
         public async void GenerateData()
         {
-            PokemonsData = new ObservableCollection<PokemonDataModel>();
+            pokemonsData.Clear ();
             List<PokemonApiModel> requestData = await HttpJsonClient<PokemonApiModel>.GetAll(Constantes.POKE_TEAM_URL) ?? new List<PokemonApiModel>();
             foreach (var item in requestData)
             {
-                PokemonsData.Add(new PokemonDataModel { 
+                pokemonsData.Add(new PokemonDataModel { 
                     DateStart = item.DateStart, 
                     DateEnd =item.DateEnd , 
                     Name = item.Name, 
@@ -35,6 +51,20 @@ namespace PokemonBackRules.ViewModel
                     DamageReceivedTrainer = item.DamageReceivedTrainer,
                     DamageDonePokemon = item.DamageDonePokemon, 
                     Catch = item.Catch});
+            }
+        }
+
+        [RelayCommand]
+        public void SaveToFile()
+        {
+            var saveFileDialog = new SaveFileDialog
+            {
+                Filter = Constantes.JSON_FILTER
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                _fileService.Save(saveFileDialog.FileName, pokemonsData);
             }
         }
     }
