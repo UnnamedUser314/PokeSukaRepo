@@ -38,7 +38,7 @@ namespace PokemonBackRules.Utils
                 return JsonSerializer.Deserialize<List<T>>(responseBody);
             }
         }
-        public static async void Post(string url, object data)
+        public static async Task Post(string url, object data)
         {
             using HttpClient httpClient = new HttpClient();
             {
@@ -58,7 +58,7 @@ namespace PokemonBackRules.Utils
 
             }
         }
-        public static async void Put(string url, object data)
+        public static async Task Put(string url, object data)
         {
             using HttpClient httpClient = new HttpClient();
             {
