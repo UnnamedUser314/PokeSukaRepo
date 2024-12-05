@@ -31,6 +31,18 @@ namespace FirstAPI.Controllers
             return Pokemons.FirstOrDefault(x => x.Id == id);
         }
 
+        [HttpDelete("deleteAll")]
+        public IActionResult DeleteAll()
+        {
+            if (Pokemons.Count == 0)
+            {
+                return NoContent(); // 204 No Content if there's nothing to delete
+            }
+
+            Pokemons.Clear();
+            return Ok("All Pokémon data has been deleted."); // 200 OK with a message
+        }
+
         [HttpPost]
         public PokemonDTO Post([FromBody] PokemonDTO pokemon)
         {
@@ -55,6 +67,7 @@ namespace FirstAPI.Controllers
                 return null;
             }
             pokemonBBDD.Name = pokemon.Name;
+            
             pokemonBBDD.DamageDonePokemon = pokemon.DamageDonePokemon;
             pokemonBBDD.DamageDoneTrainer = pokemon.DamageDoneTrainer;
             pokemonBBDD.DamageReceivedTrainer = pokemon.DamageReceivedTrainer;

@@ -20,12 +20,13 @@ namespace PokemonBackRules.ViewModel
         private readonly IFileService<PokemonDataModel> _fileService;
 
         
-        //public ObservableCollection<PokemonDataModel> PokemonsData { get; set; } 
+        //public ObservableCollection<PokemonDataModel> Pokemons { get; set; } 
 
         public HistoricViewModel (IFileService<PokemonDataModel> fileService)
         {
             _fileService = fileService;
             pokemonsData = new ObservableCollection<PokemonDataModel> ();
+            
         }
         [ObservableProperty]
 
@@ -44,9 +45,11 @@ namespace PokemonBackRules.ViewModel
             foreach (var item in requestData)
             {
                 pokemonsData.Add(new PokemonDataModel { 
+                    FrontDefault = item.FrontDefault,
+                    Name = item.Name,
+                    Id = item.Id,
                     DateStart = item.DateStart, 
-                    DateEnd =item.DateEnd , 
-                    Name = item.Name, 
+                    DateEnd =item.DateEnd ,                    
                     DamageDoneTrainer = item.DamageDoneTrainer,
                     DamageReceivedTrainer = item.DamageReceivedTrainer,
                     DamageDonePokemon = item.DamageDonePokemon, 

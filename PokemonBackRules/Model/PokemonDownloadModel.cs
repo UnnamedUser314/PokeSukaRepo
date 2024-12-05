@@ -2,22 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace PokemonBackRules.Model
 {
-    public class PokemonDataModel 
+    public class PokemonDownloadModel
     {
         public string FrontDefault {  get; set; }
-        
         public string Name { get; set; }
         public int Id { get; set; }
+
         public string DateStart { get; set; }
 
         public string DateEnd { get; set; }
-
-        
 
         public string DamageDoneTrainer { get; set; }
 

@@ -19,6 +19,9 @@
         <DataTemplate DataType="{x:Type viewmodel:HistoricViewModel}">
             <view:HistoricView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodel:ImportViewModel}">
+            <view:ImportView/>
+        </DataTemplate>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -41,7 +44,9 @@
                         CommandParameter="{Binding HistoricViewModel}">
 
             </MenuItem>
-            <MenuItem Header="Import">
+            <MenuItem Header="Import"
+                      Command="{Binding SelectViewModelCommand}"
+                        CommandParameter="{Binding ImportViewModel}">
 
             </MenuItem>
         </Menu>

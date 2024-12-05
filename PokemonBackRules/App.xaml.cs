@@ -41,6 +41,7 @@ namespace PokemonBackRules
             services.AddTransient<PokeSukaViewModel>();
             services.AddTransient<TeamViewModel>();
             services.AddTransient<HistoricViewModel>();
+            services.AddTransient<ImportViewModel>();
 
             services.AddSingleton(typeof(IFileService<>), typeof(FileService<>));
 

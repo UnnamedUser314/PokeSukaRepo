@@ -12,9 +12,9 @@ namespace PokemonBackRules.ViewModel
     {
         private ViewModelBase? _selectedViewModel;
 
-        public MainViewModel(PokeSukaViewModel pokeSukaViewModel, TeamViewModel teamViewModel, HistoricViewModel historicViewModel)
+        public MainViewModel(PokeSukaViewModel pokeSukaViewModel, TeamViewModel teamViewModel, HistoricViewModel historicViewModel, ImportViewModel importViewModel)
         {
-            
+            ImportViewModel = importViewModel;
             PokeSukaViewModel = pokeSukaViewModel;
             HistoricViewModel = historicViewModel;
             TeamViewModel = teamViewModel;
@@ -32,6 +32,7 @@ namespace PokemonBackRules.ViewModel
         public PokeSukaViewModel PokeSukaViewModel { get; set; }
         public HistoricViewModel HistoricViewModel { get; set; }
         public TeamViewModel TeamViewModel { get; set; }
+        public ImportViewModel ImportViewModel { get; set; }
 
         public async override Task LoadAsync()
         {
