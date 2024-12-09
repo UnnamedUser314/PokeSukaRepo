@@ -45,6 +45,7 @@ namespace PokemonBackRules.ViewModel
             foreach (var item in requestData)
             {
                 pokemonsData.Add(new PokemonDataModel { 
+                    UniqueId = item.UniqueId,
                     FrontDefault = item.FrontDefault,
                     Name = item.Name,
                     Id = item.Id,
@@ -53,7 +54,8 @@ namespace PokemonBackRules.ViewModel
                     DamageDoneTrainer = item.DamageDoneTrainer,
                     DamageReceivedTrainer = item.DamageReceivedTrainer,
                     DamageDonePokemon = item.DamageDonePokemon, 
-                    Catch = item.Catch});
+                    Catch = item.Catch,
+                    Shiny = item.Shiny});
             }
         }
 

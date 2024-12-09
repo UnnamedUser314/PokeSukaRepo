@@ -41,7 +41,7 @@ namespace PokemonBackRules.ViewModel
             List<PokemonApiModel> requestData = await HttpJsonClient<PokemonApiModel>.GetAll(Constantes.POKE_TEAM_URL) ?? new List<PokemonApiModel>();
 
             var dictPokeLevel = requestData.Where(x => x.Catch)
-                              .GroupBy(x => x.Id)
+                              .GroupBy(x => new {x.Id, x.Shiny})
                               .Select(x => new { Pokemon = x.First(), Level = x.Count() });
             foreach (var element in dictPokeLevel)
             {
@@ -59,7 +59,7 @@ namespace PokemonBackRules.ViewModel
                 Items.Add(new StackPanelItemModel
                 {
                     ImagePath = PokeTypes[i][0],
-                    PokemonName = PokeTypes[i][1]
+                    PokemonName = PokeTypes[i][1]                  
                 });
             }
         }

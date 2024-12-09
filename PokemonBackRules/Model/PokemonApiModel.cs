@@ -9,6 +9,8 @@ namespace PokemonBackRules.Model
 {
     class PokemonApiModel
     {
+        [JsonPropertyName("uniqueId")]
+        public Guid UniqueId { get; set; }
         [JsonPropertyName("frontDefault")]
         public string FrontDefault { get; set; }
         [JsonPropertyName("name")]
@@ -28,6 +30,8 @@ namespace PokemonBackRules.Model
         public string DamageDonePokemon { get; set; }
         [JsonPropertyName("catch")]
         public bool Catch { get; set; }
+        [JsonPropertyName("shiny")]
+        public bool Shiny { get; set; }
     }
 
     public class Pokemon

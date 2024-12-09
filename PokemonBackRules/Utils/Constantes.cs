@@ -11,7 +11,7 @@ namespace PokemonBackRules.Utils
         public const string POKE_TYPE_URL= "https://pokeapi.co/api/v2/pokemon/";
         public const string POKE_TEAM_URL= "https://localhost:7119/Pokemon";
         public const int MAX_POKE_ITEMS = 15;
-        public const string MISSINGNO_IMAGE_PATH = "../Resources/missingNo.jpg";
+        public const string SUCCESS_IMAGE_PATH = "../Resources/success-removebg-preview.png";
         public const string JSON_FILTER = "JSON Files (*.json)|*.json|All Files (*.*)|*.*";
     }
 }

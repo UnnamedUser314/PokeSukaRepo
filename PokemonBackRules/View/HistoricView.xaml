@@ -11,7 +11,7 @@
              Background="Wheat">
     <Grid>
 
-        <DataGrid ItemsSource="{Binding PokemonsData}" Margin="96,35,96,176" AutoGenerateColumns="False" >
+        <DataGrid ItemsSource="{Binding PokemonsData}" Margin="53,37,48,174" AutoGenerateColumns="False" >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
                 <DataGridTextColumn Header="Date Start" Binding="{Binding DateStart}" />
@@ -20,6 +20,7 @@
                 <DataGridTextColumn Header="Damage Received by Trainer" Binding="{Binding DamageReceivedTrainer}" />
                 <DataGridTextColumn Header="Damage Done by Pokemon" Binding="{Binding DamageDonePokemon}" />
                 <DataGridCheckBoxColumn Header="Catch" Binding="{Binding Catch}" />
+                <DataGridCheckBoxColumn Header="Shiny" Binding="{Binding Shiny}" />
             </DataGrid.Columns>
         </DataGrid>
         <Button Command="{Binding SaveToFileCommand}" Content="Guardar los sukitones JSON" HorizontalAlignment="Center" Margin="0,329,0,0" VerticalAlignment="Top" Height="47" Width="171"/>

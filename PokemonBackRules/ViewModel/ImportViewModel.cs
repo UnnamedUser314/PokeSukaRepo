@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
 using PokemonBackRules.Interfaces;
 using PokemonBackRules.Model;
@@ -16,6 +17,7 @@ namespace PokemonBackRules.ViewModel
     public partial class ImportViewModel : ViewModelBase
     {
         private readonly IFileService<PokemonDataModel> _fileService;
+
         public ImportViewModel(IFileService<PokemonDataModel> fileService)
         {
             _fileService = fileService;
@@ -41,12 +43,14 @@ namespace PokemonBackRules.ViewModel
             if (openFileDialog.ShowDialog() == true)
             {
                 var loadedContacts = _fileService.Load(openFileDialog.FileName);
-                HttpJsonClient<PokemonApiModel>.DeleteAll(Constantes.POKE_TEAM_URL);
+                var response = HttpJsonClient<PokemonApiModel>.DeleteAll(Constantes.POKE_TEAM_URL);
+
                 foreach (var contact in loadedContacts)
                 {
                     HttpJsonClient<PokemonApiModel>.Post(Constantes.POKE_TEAM_URL, contact);
                     
                 }
+
             }
         }
     }

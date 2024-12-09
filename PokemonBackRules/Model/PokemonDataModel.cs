@@ -9,6 +9,7 @@ namespace PokemonBackRules.Model
 {
     public class PokemonDataModel 
     {
+        public Guid UniqueId {  get; set; }
         public string FrontDefault {  get; set; }
         
         public string Name { get; set; }
@@ -26,5 +27,6 @@ namespace PokemonBackRules.Model
         public string DamageDonePokemon { get; set; }
 
         public bool Catch { get; set; }
+        public bool Shiny { get; set; }
     }
 }

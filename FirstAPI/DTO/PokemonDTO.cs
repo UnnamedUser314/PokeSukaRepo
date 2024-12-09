@@ -4,7 +4,7 @@ namespace FirstAPI.DTO
 {
     public class PokemonDTO
     {
-
+        public Guid UniqueId { get; set; } 
 
         public string FrontDefault { get; set; }
         public string Name { get; set; }
@@ -15,6 +15,7 @@ namespace FirstAPI.DTO
         public string DamageReceivedTrainer { get; set; }
         public string DamageDonePokemon { get; set; }
         public bool Catch { get; set; }
+        public bool Shiny { get; set; }
 
     }
 }
