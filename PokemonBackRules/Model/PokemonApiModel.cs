@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PokemonBackRules.Model
 {
-    class PokemonApiModel
+    public class PokemonApiModel
     {
         [JsonPropertyName("uniqueId")]
         public Guid UniqueId { get; set; }

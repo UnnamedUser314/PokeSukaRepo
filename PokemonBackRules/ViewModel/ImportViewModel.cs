@@ -17,11 +17,15 @@ namespace PokemonBackRules.ViewModel
     public partial class ImportViewModel : ViewModelBase
     {
         private readonly IFileService<PokemonDataModel> _fileService;
+        private readonly IHttpJsonClientProvider<PokemonApiModel> _httpJsonClientProvider;
 
-        public ImportViewModel(IFileService<PokemonDataModel> fileService)
+        [ObservableProperty]
+        private string imagePath;
+
+        public ImportViewModel(IFileService<PokemonDataModel> fileService, IHttpJsonClientProvider<PokemonApiModel> httpJsonClientProvider)
         {
             _fileService = fileService;
-           
+           _httpJsonClientProvider = httpJsonClientProvider;
 
         }
 
@@ -33,7 +37,7 @@ namespace PokemonBackRules.ViewModel
         }
 
         [RelayCommand]
-        public void LoadFromFile()
+        public async void LoadFromFile()
         {
             var openFileDialog = new OpenFileDialog
             {
@@ -43,13 +47,20 @@ namespace PokemonBackRules.ViewModel
             if (openFileDialog.ShowDialog() == true)
             {
                 var loadedContacts = _fileService.Load(openFileDialog.FileName);
+                //if loadedContacts null flecha
+
+                if (loadedContacts != null) {
+                    imagePath = Constantes.SUCCESS_IMAGE_PATH;
+                }
+
                 var response = HttpJsonClient<PokemonApiModel>.DeleteAll(Constantes.POKE_TEAM_URL);
 
                 foreach (var contact in loadedContacts)
                 {
-                    HttpJsonClient<PokemonApiModel>.Post(Constantes.POKE_TEAM_URL, contact);
+                    _httpJsonClientProvider.Post(Constantes.POKE_TEAM_URL, contact);
                     
                 }
+                
 
             }
         }

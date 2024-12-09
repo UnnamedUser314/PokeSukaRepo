@@ -13,9 +13,18 @@ namespace PokemonBackRules.Services
     {
         public IEnumerable<T> Load(string filePath)
         {
-            if (!File.Exists(filePath)) return new List<T>();
-            var content = File.ReadAllText(filePath);
-            return JsonSerializer.Deserialize<List<T>>(content) ?? new List<T>();
+            try
+            {
+                if (!File.Exists(filePath)) return new List<T>();
+                var content = File.ReadAllText(filePath);
+                return JsonSerializer.Deserialize<List<T>>(content) ?? new List<T>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return default;
+           
         }
 
         public void Save(string filePath, IEnumerable<T> data)

@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace PokemonBackRules.Utils
 {
-    public static class HttpJsonClient<T>
+    //TODO esto es un service, no utils
+    public static class HttpJsonClient<T> //IHttpJsonClientPrivider
     {
         public static async Task<T?> Get(string url)
         {
@@ -62,14 +63,14 @@ namespace PokemonBackRules.Utils
         {
             using HttpClient httpClient = new HttpClient();
             {
-               
+
                 // Serialize the updated Pokemon object to JSON
                 var json = JsonSerializer.Serialize(data);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 // Send the PUT request
                 var response = await httpClient.PutAsync(url, content);
-                
+
             }
         }
         public static async Task DeleteAll(string url)

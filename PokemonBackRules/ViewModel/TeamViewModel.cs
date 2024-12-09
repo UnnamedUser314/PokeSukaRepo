@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using PokemonBackRules.Interfaces;
 using PokemonBackRules.Model;
 using PokemonBackRules.Models;
 using PokemonBackRules.Utils;
@@ -28,8 +29,11 @@ namespace PokemonBackRules.ViewModel
         [ObservableProperty]
         public int _PokemonType;
 
-        public TeamViewModel()
+        private readonly IHttpJsonClientProvider<PokemonApiModel> _httpJsonClientProvider;
+
+        public TeamViewModel(IHttpJsonClientProvider<PokemonApiModel> httpJsonClientProvider)
         {
+            _httpJsonClientProvider = httpJsonClientProvider;
             Items = new ObservableCollection<StackPanelItemModel>();
         }
 
@@ -38,7 +42,7 @@ namespace PokemonBackRules.ViewModel
             Items.Clear();
             PokeTypes.Clear();
 
-            List<PokemonApiModel> requestData = await HttpJsonClient<PokemonApiModel>.GetAll(Constantes.POKE_TEAM_URL) ?? new List<PokemonApiModel>();
+            List<PokemonApiModel> requestData = await _httpJsonClientProvider.GetAll(Constantes.POKE_TEAM_URL) ?? new List<PokemonApiModel>();
 
             var dictPokeLevel = requestData.Where(x => x.Catch)
                               .GroupBy(x => new {x.Id, x.Shiny})

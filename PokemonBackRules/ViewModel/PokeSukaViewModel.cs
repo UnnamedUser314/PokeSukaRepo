@@ -9,21 +9,24 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Text;
 using System.Configuration;
+using PokemonBackRules.Interfaces;
 
 
 namespace PokemonBackRules.ViewModel
 {
     public partial class PokeSukaViewModel : ViewModelBase
     {
+        private readonly IHttpJsonClientProvider<OnePokemonModel> _httpJsonClientProviderApi;
+        private readonly IHttpJsonClientProvider<PokemonApiModel> _httpJsonClientProviderMiApi;
 
         private static readonly Random _random = new();
         private static double pokemonCurrentHealth = 0;
         private static int pokemonTotalHealth = 0;
         private static double myCurrentHealth = 1000;
-        private static string pokemonName = null;
+        private static string? pokemonName = null;
         private static int pokemonId = 0;
-        private static string dateStart=null;
-        private static string dateEnd=null;
+        private static string? dateStart=null;
+        private static string? dateEnd=null;
         private static double damageDoneByMe = 0;
         private static double damageDoneByPokemon = 0;
         private static bool shiny = false;
@@ -42,9 +45,10 @@ namespace PokemonBackRules.ViewModel
         public double myHpLeft;
 
 
-        public PokeSukaViewModel()
+        public PokeSukaViewModel(IHttpJsonClientProvider<OnePokemonModel> httpJsonClientProviderApi, IHttpJsonClientProvider<PokemonApiModel> httpJsonClientProviderMiApi)
         {
-            
+            _httpJsonClientProviderApi = httpJsonClientProviderApi;
+            _httpJsonClientProviderMiApi = httpJsonClientProviderMiApi;
         }
 
         public override async Task LoadAsync()
@@ -63,26 +67,24 @@ namespace PokemonBackRules.ViewModel
             double myAttack = _random.Next(0, 40);
             damageDoneByMe += myAttack;
             pokemonCurrentHealth -= myAttack;
-            PokeHpLeft = (pokemonCurrentHealth / pokemonTotalHealth) * 100;
+            PokeHpLeft = Math.Round((pokemonCurrentHealth / pokemonTotalHealth) * 100);
 
             if (pokemonCurrentHealth > 0)
             {
                 double damagePoke = int.Parse(Ataque);
                 damageDoneByPokemon += damagePoke;
                 myCurrentHealth -= damagePoke;
-                MyHpLeft = (myCurrentHealth/1000)*100;
+                MyHpLeft = Math.Round((myCurrentHealth / 1000) * 100);
             } else
             {
-                var pokemon = CreateUncapturedPokemonObj();               
-                HttpJsonClient<PokemonApiModel>.Put(Constantes.POKE_TEAM_URL+"/byGuid/"+uniqueId, pokemon);
+                PokemonApiModel pokemon = CreatePokemonObj();
+                pokemon.DamageDoneTrainer = damageDoneByMe.ToString();
+                pokemon.DamageReceivedTrainer = damageDoneByPokemon.ToString();
+                pokemon.DamageDonePokemon = (damageDoneByPokemon).ToString();
+
+                _httpJsonClientProviderMiApi.Put(Constantes.POKE_TEAM_URL+"/byGuid/"+uniqueId, pokemon);
                 SpawnPokemon();               
             }
-            //if(myCurrentHealth<=0)
-            //{
-            //    var pokemon = CreateCapturedPokemonObj();
-            //    HttpJsonClient<PokemonApiModel>.Post(Constantes.POKE_TEAM_URL, pokemon);
-            //    SpawnPokemon();                
-            //}
             
         }
 
@@ -105,9 +107,12 @@ namespace PokemonBackRules.ViewModel
                         myCurrentHealth += 50;
                     }
 
-                    pokemon = CreateCapturedPokemonObj();
+                    pokemon.DamageDoneTrainer = damageDoneByMe.ToString();
+                    pokemon.DamageReceivedTrainer = damageDoneByPokemon.ToString();
+                    pokemon.DamageDonePokemon = (damageDoneByPokemon - 50).ToString();
+                    pokemon.Catch = true;
 
-                    HttpJsonClient<PokemonApiModel>.Put(Constantes.POKE_TEAM_URL + "/byGuid/" + uniqueId, pokemon);
+                    _httpJsonClientProviderMiApi.Put(Constantes.POKE_TEAM_URL + "/byGuid/" + uniqueId, pokemon);
                     SpawnPokemon();
                 }                
                            
@@ -123,14 +128,19 @@ namespace PokemonBackRules.ViewModel
         [RelayCommand]
         public void Escapar()
         {
-            var pokemon = CreateUncapturedPokemonObj();
-            HttpJsonClient<PokemonApiModel>.Put(Constantes.POKE_TEAM_URL + "/byGuid/" + uniqueId, pokemon);
+            var pokemon = CreatePokemonObj();
+            pokemon.DamageDoneTrainer = damageDoneByMe.ToString();
+            pokemon.DamageReceivedTrainer = damageDoneByPokemon.ToString();
+            pokemon.DamageDonePokemon = (damageDoneByPokemon).ToString();
+            //TODO service HTTPCLINT
+            _httpJsonClientProviderMiApi.Put(Constantes.POKE_TEAM_URL + "/byGuid/" + uniqueId, pokemon);
             SpawnPokemon();
         }
-        
-        public object CreatePokemonObj()
+
+        // TODO RETURN NEW PokemonApiModel
+        public PokemonApiModel CreatePokemonObj()
         {
-            return new
+            return new PokemonApiModel
             {
                 UniqueId = uniqueId,
                 FrontDefault = Fronti,
@@ -144,54 +154,15 @@ namespace PokemonBackRules.ViewModel
                 Catch = false,
                 Shiny = shiny
             };
-        }
-       
-
-
-        public object CreateCapturedPokemonObj()
-        {
-            return new
-            {
-                UniqueId = uniqueId,
-                FrontDefault = Fronti,
-                Name = pokemonName,
-                Id = pokemonId,
-                DateStart = dateStart,
-                DateEnd = DateTime.Now.ToString("yyyy/mm/ddThh:mm:ss"),
-                DamageDoneTrainer = damageDoneByMe.ToString(),
-                DamageReceivedTrainer = damageDoneByPokemon.ToString(),
-                DamageDonePokemon = (damageDoneByPokemon - 50).ToString(),
-                Catch = true,
-                Shiny = shiny
-            };
-        }
-
-        public object CreateUncapturedPokemonObj()
-        {
-            return new
-            {
-                UniqueId = uniqueId,
-                FrontDefault = Fronti,
-                Name = pokemonName,
-                Id = pokemonId,
-                DateStart = dateStart,
-                DateEnd = DateTime.Now.ToString("yyyy/mm/ddThh:mm:ss"),
-                DamageDoneTrainer = damageDoneByMe.ToString(),
-                DamageReceivedTrainer = damageDoneByPokemon.ToString(),
-                DamageDonePokemon = (damageDoneByPokemon).ToString(),
-                Catch = false,
-                Shiny = shiny
-            };
-        }
-
+        }             
 
         public async void SpawnPokemon()
         {
             int randomNumber = _random.Next(1, 100);
             int pokemonNum = _random.Next(1, 100);
             PokeHpLeft = 100;
-            MyHpLeft = (myCurrentHealth / 1000) * 100;
-            OnePokemonModel requestData = await HttpJsonClient<OnePokemonModel>.Get(Constantes.POKE_TYPE_URL + pokemonNum) ?? new OnePokemonModel();
+            MyHpLeft = Math.Round((myCurrentHealth / 1000) * 100);
+            OnePokemonModel requestData = await _httpJsonClientProviderApi.Get(Constantes.POKE_TYPE_URL + pokemonNum) ?? new OnePokemonModel();
             Ataque = requestData.Stats.ElementAt(1).BaseStat.ToString();
 
             if (randomNumber > 95)
@@ -217,7 +188,7 @@ namespace PokemonBackRules.ViewModel
 
 
             var pokemon = CreatePokemonObj();
-            HttpJsonClient<PokemonApiModel>.Post(Constantes.POKE_TEAM_URL, pokemon);
+            _httpJsonClientProviderMiApi.Post(Constantes.POKE_TEAM_URL, pokemon);
         }
         
 

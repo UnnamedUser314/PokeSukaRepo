@@ -44,6 +44,7 @@ namespace PokemonBackRules
             services.AddTransient<ImportViewModel>();
 
             services.AddSingleton(typeof(IFileService<>), typeof(FileService<>));
+            services.AddSingleton(typeof(IHttpJsonClientProvider<>), typeof(HttpJsonClientService<>));
 
             return services.BuildServiceProvider();
         }

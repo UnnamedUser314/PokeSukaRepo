@@ -18,13 +18,15 @@ namespace PokemonBackRules.ViewModel
     public partial class HistoricViewModel : ViewModelBase
     {
         private readonly IFileService<PokemonDataModel> _fileService;
+        private readonly IHttpJsonClientProvider<PokemonApiModel> _httpJsonClientProvider;
 
         
         //public ObservableCollection<PokemonDataModel> Pokemons { get; set; } 
 
-        public HistoricViewModel (IFileService<PokemonDataModel> fileService)
+        public HistoricViewModel (IFileService<PokemonDataModel> fileService, IHttpJsonClientProvider<PokemonApiModel> httpJsonClientProvider)
         {
             _fileService = fileService;
+            _httpJsonClientProvider = httpJsonClientProvider;
             pokemonsData = new ObservableCollection<PokemonDataModel> ();
             
         }
@@ -41,7 +43,8 @@ namespace PokemonBackRules.ViewModel
         public async void GenerateData()
         {
             pokemonsData.Clear ();
-            List<PokemonApiModel> requestData = await HttpJsonClient<PokemonApiModel>.GetAll(Constantes.POKE_TEAM_URL) ?? new List<PokemonApiModel>();
+            //List<PokemonApiModel> requestData = await HttpJsonClient<PokemonApiModel>.GetAll(Constantes.POKE_TEAM_URL) ?? new List<PokemonApiModel>();
+            List<PokemonApiModel> requestData = await _httpJsonClientProvider.GetAll(Constantes.POKE_TEAM_URL) ?? new List<PokemonApiModel>();
             foreach (var item in requestData)
             {
                 pokemonsData.Add(new PokemonDataModel { 
