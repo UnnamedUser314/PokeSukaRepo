@@ -20,7 +20,7 @@ namespace PokemonBackRules.ViewModel
         private readonly IHttpJsonClientProvider<PokemonApiModel> _httpJsonClientProvider;
 
         [ObservableProperty]
-        private string imagePath;
+        private string _imagePath;
 
         public ImportViewModel(IFileService<PokemonDataModel> fileService, IHttpJsonClientProvider<PokemonApiModel> httpJsonClientProvider)
         {
@@ -50,7 +50,10 @@ namespace PokemonBackRules.ViewModel
                 //if loadedContacts null flecha
 
                 if (loadedContacts != null) {
-                    imagePath = Constantes.SUCCESS_IMAGE_PATH;
+                    ImagePath = Constantes.SUCCESS_IMAGE_PATH;
+                } else
+                {
+                    ImagePath = Constantes.ERROR_IMAGE_PATH;
                 }
 
                 var response = HttpJsonClient<PokemonApiModel>.DeleteAll(Constantes.POKE_TEAM_URL);

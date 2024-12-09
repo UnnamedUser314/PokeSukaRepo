@@ -9,14 +9,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\error.png" />
     <None Remove="Resources\missingNo.jpg" />
+    <None Remove="Resources\success-removebg-preview.png" />
   </ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Resource Include="Resources\error.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Resource>
 	  <Resource Include="Resources\missingNo.jpg">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Resource>
+	  <Resource Include="Resources\success-removebg-preview.png">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Resource>
 	</ItemGroup>

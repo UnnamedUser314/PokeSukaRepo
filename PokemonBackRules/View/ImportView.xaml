@@ -13,7 +13,7 @@
         <Button Content="Import Json Sukitones" Command="{Binding LoadFromFileCommand}" HorizontalAlignment="Center" Margin="0,63,0,0" VerticalAlignment="Top" Height="62" Width="160" RenderTransformOrigin="0.5,0.5">
 
         </Button>
-        <Image Source="{Binding }" HorizontalAlignment="Left" Height="100" Margin="348,189,0,0" VerticalAlignment="Top" Width="100"/>
+        <Image Source="{Binding ImagePath}" HorizontalAlignment="Left" Height="100" Margin="348,189,0,0" VerticalAlignment="Top" Width="100"/>
 
     </Grid>
 </UserControl>
